@@ -25,7 +25,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ searchTerm, setSearchTerm, setFil
       </div>
 
       {/* Category Filter */}
-      <div className="w-full md:w-1/4">
+      <div className="w-full md:w-1/11">
         <Select onValueChange={setFilterCategory} defaultValue="All">
           <SelectTrigger>
             <SelectValue placeholder="Select Category" />

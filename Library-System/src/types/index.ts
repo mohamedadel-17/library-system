@@ -8,4 +8,5 @@ export interface Book {
   status: BookStatus;
   cover: string;
   returnDate?: string;
+  borrowerName?: string;
 }

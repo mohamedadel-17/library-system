@@ -7,8 +7,9 @@ export const booksData: Book[] = [
     title: "Clean Code",
     author: "Robert C. Martin",
     category: "Programming",
-    status: "Available",
-    cover: ""
+    status: "Borrowed",
+    borrowerName: "John Doe",
+    cover: "https://i.postimg.cc/nrrGPwsT/71nj3JM-ig-L-AC-UF894-1000-QL80.jpg"
   },
   {
     id: 2,
@@ -16,8 +17,9 @@ export const booksData: Book[] = [
     author: "Thomas H. Cormen",
     category: "Computer Science",
     status: "Borrowed",
-    returnDate: "2023-12-10",
-    cover: ""
+    cover: "",
+    borrowerName: "John Doe",
+    returnDate: "2025-12-15"
   },
   {
     id: 3,
