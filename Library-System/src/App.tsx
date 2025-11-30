@@ -1,10 +1,14 @@
-import LoginPage from "./Pages/Login"
+// App.tsx
+import { Routes, Route } from "react-router-dom"
+import Login from "./Pages/Login"
+import Signup from "./Pages/SignUp"
 
 function App() {
   return (
-    <>
-      <LoginPage />
-    </>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/Signup" element={<Signup />} />
+      </Routes>
   )
 }
 
