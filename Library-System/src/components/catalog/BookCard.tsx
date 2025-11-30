@@ -43,7 +43,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
   return (
     <Card className="flex flex-col h-full hover:shadow-md transition-shadow">
       <div className="relative h-48 w-full bg-gray-100 flex items-center justify-center rounded-t-lg overflow-hidden">
-        <img src={book.cover} alt={book.title} className="object-cover w-full h-full" /> //? book cover
+        <img src={book.cover} alt={book.title} className="object-cover w-full h-full" /> {/*//! book cover */}
         <Badge 
           className="absolute top-2 right-2" 
           variant={isAvailable ? "default" : "destructive"} 
