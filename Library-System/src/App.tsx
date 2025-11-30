@@ -1,15 +1,17 @@
-// App.tsx
-import { Routes, Route } from "react-router-dom"
-import Login from "./Pages/Login"
-import Signup from "./Pages/SignUp"
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import CatalogPage from './pages/CatalogPage';
+import LoginPage from './pages/Login';
 
-function App() {
+const App: React.FC = () => {
   return (
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-      </Routes>
-  )
-}
-
-export default App
+    <Router>
+          <Routes>
+            <Route path="/" element={<CatalogPage />} />
+            <Route path="/login" element={<LoginPage />} />            
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+    </Router>
+  );
+};
+export default App;
