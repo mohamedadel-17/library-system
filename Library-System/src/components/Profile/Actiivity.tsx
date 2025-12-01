@@ -3,10 +3,10 @@ import type { User } from "../../types/user";
 import SectionCard from "./SectionCard";
 
 const activityItems = [
-  { time: "1 hour ago", description: "Updated profile bio and image." },
-  { time: "4 hours ago", description: 'Completed "Introduction to Tailwind" course.' },
-  { time: "Yesterday", description: 'Created new project: "E-commerce Redesign Prototype".' },
-  { time: "3 days ago", description: "Posted 3 new code snippets." },
+  { time: "12/11/2025", description: "Browed Clean Code Book" },
+  { time: "12/11/2025", description: "Browed Clean Code Book" },
+  { time: "12/11/2025", description: "Browed Clean Code Book" },
+  { time: "12/11/2025", description: "Browed Clean Code Book" },
 ];
 
 const GeneralInfo: React.FC<{ user: User }> = ({ user }) => (
