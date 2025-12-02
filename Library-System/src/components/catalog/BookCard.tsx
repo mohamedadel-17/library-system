@@ -96,7 +96,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
       </CardContent>
 
       {/* Bottom Action Button */}
-      <CardFooter className="">
+      <CardFooter className="mt-auto pb-3">
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button variant={isAvailable ? "default" : "outline"} className={triggerBtnClass}>
