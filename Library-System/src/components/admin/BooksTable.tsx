@@ -34,7 +34,7 @@ export default function BooksTable({
   };
 
   return (
-    <div className="rounded-md border border-border bg-background shadow overflow-hidden">
+    <div className="rounded-md border border-border bg-card shadow overflow-hidden">
       <Table>
         <TableHeader>
           <TableRow>
@@ -65,7 +65,7 @@ export default function BooksTable({
                     variant={book.status === "Available" ? "default" : "secondary"}
                     className={
                       book.status === "Available"
-                        ? "bg-muted/40 text-foreground"
+                        ? "bg-green-400/40 text-foreground"
                         : "bg-primary/10 text-primary"
                     }
                   >
@@ -102,12 +102,11 @@ export default function BooksTable({
                 {/* Fine */}
                 <TableCell>
                   {isOverdue ? (
-                    <Badge
-                      variant="destructive"
-                      className="bg-destructive/10 text-destructive"
+                    <span
+                      className=" text-destructive font-bold"
                     >
                       ${fine} Due
-                    </Badge>
+                    </span>
                   ) : (
                     <span className="text-success font-bold">$0</span>
                   )}
