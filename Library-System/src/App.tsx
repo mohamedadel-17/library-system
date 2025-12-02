@@ -8,18 +8,17 @@ import SignUp from './pages/SignUp';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import UserBooksPage from './pages/UserBooksPage';
-import StatisticsPage from './pages/StatisticsPage';
 import UserAccounts from './pages/UserAccounts';
+import StatisticsPage from './pages/StatisticsPage';
 
 // Layout Components (For Users)
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
-import { ThemeProvider } from './components/theme-provider';
 
 // Layout Components (New Admin Sidebar)
 import { SideBar } from "./components/admin/SideBar"; 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-
+import { ThemeProvider } from './components/theme-provider';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true); 
@@ -48,14 +47,14 @@ export default function App() {
         ) : userRole === 'admin' ? (
           // Case 2: ADMIN LAYOUT (Sidebar + Dashboard)
           <SidebarProvider>
-            <SideBar />
+            <SideBar onLogout={handleLogout}/>
 
             <SidebarInset>  
                   <Routes>
                     {/* Admin Specific Routes */}
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route path="/admin/stats" element={<StatisticsPage />} />
-                    <Route path="/admin/users" element= {<UserAccounts/>} />
+                    <Route path="/admin/users" element={<UserAccounts />} />
                     {/* Shared Route */}
                     <Route path="/profile" element={<Profile />} />
                     {/* Redirects */}
