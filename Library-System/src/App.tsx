@@ -30,6 +30,11 @@ export default function App() {
     setUserRole(role);
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUserRole("member");
+  };
+
   return (
     <ThemeProvider>
       <Router>

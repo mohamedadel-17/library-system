@@ -1,18 +1,17 @@
 import React from "react"
 import { Link, useLocation } from "react-router-dom"
 import {
-  BookOpen,
   LayoutDashboard,
   Users,
   PieChart,
   LogOut,
-  Library,
+  PanelLeft,
 } from "lucide-react"
 import { ModeToggle } from "@/components/mode-toggle";
 
-// 1. استدعاء مكونات Shadcn الأصلية (لاحظ المسار النسبي ..)
+import { Button } from "@/components/ui/button"
 import {
-  Sidebar, // <-- ده المكون الأصلي من Shadcn
+  Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
@@ -23,14 +22,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  useSidebar,
 } from "@/components/ui/sidebar"
 
-// 2. استدعاء الـ Avatar (تأكد إنك عملت npx shadcn@latest add avatar)
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
-// 3. تغيير اسم الدالة هنا لـ SideBar
-export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+interface SideBarProps extends React.ComponentProps<typeof Sidebar> {
+  onLogout: () => void;
+}
+
+export function SideBar({ onLogout, ...props }: SideBarProps) {
   const location = useLocation();
+  const { toggleSidebar, state } = useSidebar(); 
 
   const items = [
     { title: "Books Dashboard", url: "/admin", icon: LayoutDashboard },
@@ -38,25 +41,37 @@ export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     { title: "Statistics", url: "/admin/stats", icon: PieChart },
   ]
 
-  const publicItems = [
-    { title: "Catalog (Home)", url: "/", icon: BookOpen },
-    { title: "My Borrowed Books", url: "/my-books", icon: Library },
-  ]
-
   return (
     <Sidebar collapsible="icon" {...props}>
+      
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <Link to="/">
-                <img src="/src/assets/Logo.png" alt="Logo" className="h-8 w-8" />
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span>3la Allah</span>
-                    <span className="truncate text-xs">Admin Panel</span>
-                </div>
-              </Link>
-            </SidebarMenuButton>
+            <div className={`flex items-center w-full ${state === 'collapsed' ? 'justify-center' : 'justify-between'}`}>
+              
+              <div className="group-data-[collapsible=icon]:hidden">
+                <SidebarMenuButton size="lg" asChild>
+                  <Link to="/">
+                    <img src="/src/assets/Logo.png" alt="Logo" className="h-8 w-8" />
+                    <div className="grid flex-1 text-left text-sm leading-tight">
+                        <span className="font-bold">3la Allah</span>
+                        <span className="truncate text-xs">Admin Panel</span>
+                    </div>
+                  </Link>
+                </SidebarMenuButton>
+              </div>
+
+              <Button 
+                onClick={toggleSidebar} 
+                variant="ghost" 
+                size="icon"
+                className="h-7 w-7" 
+                title={state === "collapsed" ? "Open Sidebar" : "Close Sidebar"}
+              >
+                <PanelLeft className="h-4 w-4" />
+              </Button>
+
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
@@ -89,12 +104,17 @@ export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <AvatarImage src="https://github.com/shadcn.png" alt="Admin" />
                 <AvatarFallback>AD</AvatarFallback>
               </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
+              <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">
                 <span className="truncate font-semibold">Admin</span>
                 <span className="truncate text-xs">admin@library.com</span>
               </div>
-              <ModeToggle />
-              <LogOut className="ml-auto size-4" />
+              <div className="group-data-[collapsible=icon]:hidden flex items-center gap-1 ml-auto">
+                 <ModeToggle />
+                 <LogOut 
+                    onClick={onLogout}
+                    className="size-4"
+                  />
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -103,3 +123,5 @@ export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     </Sidebar>
   )
 }
+
+
