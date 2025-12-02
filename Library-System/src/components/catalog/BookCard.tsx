@@ -1,14 +1,26 @@
-import React, { useState } from 'react';
-import type { Book } from '../../types';
-import { format } from "date-fns"; // for date format
-import { Calendar as CalendarIcon } from "lucide-react"; // calendar icon
+import React, { useState } from "react";
+import type { Book } from "../../types";
+import { format, parseISO } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 
-// Shadcn UI imports
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
-  Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -19,20 +31,17 @@ interface BookCardProps {
 }
 
 const BookCard: React.FC<BookCardProps> = ({ book }) => {
-  const [isOpen, setIsOpen] = useState(false); 
-  const [date, setDate] = useState<Date>(); // To store the selected date
+  const [isOpen, setIsOpen] = useState(false);
+  const [date, setDate] = useState<Date | undefined>();
   const isAvailable = book.status === "Available";
-
 
   const handleAction = () => {
     if (isAvailable) {
-      //! >>>>>>
-      // Borrowing status (must have chosen a date)
-      if (!date) { 
+      // Borrowing requires chosen return date
+      if (!date) {
         alert("Please select a return date first!");
         return;
-      } 
-      //! <<<<<<<
+      }
       alert(`Success! You borrowed ${book.title}. Please return it by ${format(date, "PPP")}.`);
     } else {
       alert(`Success! You reserved ${book.title}. We will notify you on ${book.returnDate}.`);
@@ -40,33 +49,53 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
     setIsOpen(false);
   };
 
+  // safely format a possible ISO string
+  const formatDateString = (iso?: string) => {
+    if (!iso) return "-";
+    try {
+      return format(parseISO(iso), "PPP");
+    } catch {
+      return iso;
+    }
+  };
+
+  // button class (merge base + variant)
+  const triggerBtnClass = cn(
+    "w-full",
+    isAvailable ? "" : "border-destructive/30 text-destructive hover:bg-destructive/10"
+  );
+
   return (
-    <Card className="flex flex-col h-full hover:shadow-md transition-shadow overflow-hidden border rounded-lg pt-0">
-      <div className="relative h-70 w-full bg-gray-100 flex items-center justify-center rounded-t-lg overflow-hidden">
-        <img src={book.cover} alt={book.title} className="object-center w-full h-full" /> {/*//! book cover */}
-        <Badge 
-          className="absolute top-2 right-2" 
-          variant={isAvailable ? "default" : "destructive"} 
+    <Card className="flex flex-col h-full hover:shadow-md transition-shadow overflow-hidden border border-border bg-background rounded-lg">
+      {/* Cover area */}
+      <div className="relative h-48 w-full bg-muted/40 flex items-center justify-center rounded-t-lg overflow-hidden">
+        <img
+          src={book.cover}
+          alt={book.title}
+          className="object-cover w-full h-full"
+        />
+        <Badge
+          className="absolute top-2 right-2"
+          variant={isAvailable ? "default" : "destructive"}
         >
           {book.status}
         </Badge>
       </div>
 
-      {/* book title & author */}
+      {/* Title & author */}
       <CardHeader>
-        <CardTitle className="line-clamp-1">{book.title}</CardTitle>
-        <CardDescription>{book.author}</CardDescription>
+        <CardTitle className="line-clamp-1 text-foreground">{book.title}</CardTitle>
+        <CardDescription className="text-muted-foreground">{book.author}</CardDescription>
       </CardHeader>
 
       <CardContent className="grow">
-      {/* book category */}
-        <span className="text-xs font-medium bg-secondary px-2 py-1 rounded text-secondary-foreground">
+        <span className="text-xs font-medium bg-primary/10 px-2 py-1 rounded text-primary">
           {book.category}
         </span>
-        {/* If it's borrowed, when will it be returned? */}
+
         {!isAvailable && book.returnDate && (
-          <p className="text-xs text-red-500 mt-3 font-medium">
-             Returns: {book.returnDate}
+          <p className="text-xs text-destructive mt-3 font-medium">
+            Returns: {formatDateString(book.returnDate)}
           </p>
         )}
       </CardContent>
@@ -74,12 +103,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
       <CardFooter>
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button 
-              className="w-full"
-              variant={isAvailable ? "default" : "outline"}
-              // Change the button style if it's a reservation
-              {...(!isAvailable && { className: "w-full border-red-200 text-red-600 hover:bg-red-50" })}
-            >
+            <Button variant={isAvailable ? "default" : "outline"} className={triggerBtnClass}>
               {isAvailable ? "Borrow Now" : "Reserve"}
             </Button>
           </DialogTrigger>
@@ -89,23 +113,23 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
               <DialogTitle>
                 {isAvailable ? "Borrow this Book" : "Reserve this Book"}
               </DialogTitle>
-              <DialogDescription>
-                {isAvailable 
-                  ? "Please specify when you will return this book." 
+              <DialogDescription className="text-muted-foreground">
+                {isAvailable
+                  ? "Please specify when you will return this book."
                   : "This book is currently borrowed. Reserve it now to pick it up when it returns."}
               </DialogDescription>
             </DialogHeader>
 
-            {/* ---- select date ----- */}
+            {/* Select date (only when available) */}
             <div className="py-4">
               {isAvailable ? (
-                // If the book is available -> Show the result to choose a return date
                 <div className="flex flex-col space-y-2">
-                  <label className="text-sm font-medium">Select Return Date:</label>
+                  <label className="text-sm font-medium text-foreground">Select Return Date:</label>
+
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
-                        variant={"outline"}
+                        variant="outline"
                         className={cn(
                           "w-full justify-start text-left font-normal",
                           !date && "text-muted-foreground"
@@ -115,28 +139,31 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                         {date ? format(date, "PPP") : <span>Pick a date</span>}
                       </Button>
                     </PopoverTrigger>
+
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
                         selected={date}
                         onSelect={setDate}
                         initialFocus
-                        disabled={(date) => date < new Date()} // منع اختيار تواريخ قديمة
+                        // disable dates in the past
+                        disabled={(d) => d < new Date()}
                       />
                     </PopoverContent>
                   </Popover>
                 </div>
               ) : (
-                // If the book is reserved -> only show the availability date
-                <p className="text-sm">
-                  Expected Availability Date: <strong>{book.returnDate}</strong>
+                <p className="text-sm text-muted-foreground">
+                  Expected Availability Date: <strong className="text-foreground">{formatDateString(book.returnDate)}</strong>
                 </p>
               )}
             </div>
-            {/* ------------------------------------------ */}
 
             <DialogFooter>
-              <Button variant="ghost" onClick={() => setIsOpen(false)}>Cancel</Button>
+              <Button variant="ghost" onClick={() => setIsOpen(false)}>
+                Cancel
+              </Button>
+
               <Button onClick={handleAction} disabled={isAvailable && !date}>
                 {isAvailable ? "Confirm Borrow" : "Confirm Reservation"}
               </Button>

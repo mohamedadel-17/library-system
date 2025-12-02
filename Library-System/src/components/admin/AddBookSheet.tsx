@@ -41,7 +41,7 @@ export default function AddBookSheet({ onAddBook, nextId }: AddBookSheetProps) {
         <SheetHeader>
           <SheetTitle>Add a New Book</SheetTitle>
         </SheetHeader>
-        <div className="grid gap-4 py-4">
+        <div className="grid items-center gap-5 px-4">
           <div className="grid gap-2">
             <Label>Title</Label>
             <Input value={newBook.title} onChange={e => setNewBook({...newBook, title: e.target.value})} placeholder="Book Title"/>

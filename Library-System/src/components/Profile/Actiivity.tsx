@@ -16,15 +16,20 @@ const GeneralInfo: React.FC<{ user: User }> = ({ user }) => (
         {activityItems.map((item, index) => (
           <li key={index} className="flex items-start space-x-3">
             <svg
-              className="h-5 w-5 text-yellow-700 mt-1"
+              className="h-5 w-5 text-yellow-600 mt-1"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
               <circle cx="10" cy="10" r="8" />
             </svg>
+
             <div className="text-sm">
-              <p className="font-semibold text-gray-800">{item.description}</p>
-              <p className="text-gray-500 text-xs">{item.time}</p>
+              <p className="font-semibold text-foreground">
+                {item.description}
+              </p>
+              <p className="text-muted-foreground text-xs">
+                {item.time}
+              </p>
             </div>
           </li>
         ))}

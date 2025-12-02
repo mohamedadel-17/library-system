@@ -8,6 +8,7 @@ import {
   LogOut,
   Library,
 } from "lucide-react"
+import { ModeToggle } from "@/components/mode-toggle";
 
 // 1. استدعاء مكونات Shadcn الأصلية (لاحظ المسار النسبي ..)
 import {
@@ -92,6 +93,7 @@ export function SideBar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <span className="truncate font-semibold">Admin</span>
                 <span className="truncate text-xs">admin@library.com</span>
               </div>
+              <ModeToggle />
               <LogOut className="ml-auto size-4" />
             </SidebarMenuButton>
           </SidebarMenuItem>
