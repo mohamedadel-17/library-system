@@ -39,6 +39,7 @@ export function LoginForm({
     /* navigate("/home") */
   }
   return (
+    // @ts-ignore
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader className="text-center">
@@ -71,6 +72,7 @@ export function LoginForm({
               </Field>
               <Field>
                 <Button type="submit"
+                   // @ts-ignore
                   onClick={onLogin}
                 >
                   Login
