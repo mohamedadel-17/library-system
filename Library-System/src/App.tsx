@@ -9,18 +9,21 @@ import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import UserBooksPage from './pages/UserBooksPage';
 import StatisticsPage from './pages/StatisticsPage';
+import UserAccounts from './pages/UserAccounts';
 
 // Layout Components (For Users)
 import Navbar from './components/layout/Navbar';
 import Footer from './components/layout/Footer';
+import { ThemeProvider } from './components/theme-provider';
 
 // Layout Components (New Admin Sidebar)
 import { SideBar } from "./components/admin/SideBar"; 
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
+
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true); 
-  const [userRole, setUserRole] = useState("member"); 
+  const [userRole, setUserRole] = useState("admin"); 
 
   const handleLogin = (role: string) => {
     setIsAuthenticated(true);
@@ -28,50 +31,52 @@ export default function App() {
   };
 
   return (
-    <Router>
-      {!isAuthenticated ? (
-        // Case 1: Not Logged In (Login / Signup Only)
-        <Routes>
-          <Route path="/login" element={<LoginPage onLogin={() => {handleLogin('member')}} />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
-      ) : userRole === 'admin' ? (
-        // Case 2: ADMIN LAYOUT (Sidebar + Dashboard)
-        <SidebarProvider>
-          <SideBar />
-
-          <SidebarInset>  
-                <Routes>
-                  {/* Admin Specific Routes */}
-                  <Route path="/admin" element={<AdminDashboard />} />
-                  <Route path="/admin/stats" element={<StatisticsPage />} />
-                  <Route path="/admin/users" element={<div className="p-4">User Management (Coming Soon)</div>} />
-                  {/* Shared Route */}
-                  <Route path="/profile" element={<Profile />} />
-                  {/* Redirects */}
-                  <Route path="*" element={<Navigate to="/admin" replace />} />
-                </Routes>  
-          </SidebarInset>
-        </SidebarProvider>
-      ) : (
-        // Case 3: USER LAYOUT (Navbar + Footer + Catalog)
-        <div className="min-h-screen flex flex-col bg-background font-sans antialiased">
-          <Navbar onLogout={() => setIsAuthenticated(false)} />
-
+    <ThemeProvider>
+      <Router>
+        {!isAuthenticated ? (
+          // Case 1: Not Logged In (Login / Signup Only)
           <Routes>
-            {/* User Specific Routes */}
-            <Route path="/" element={<CatalogPage />} />
-            <Route path="/my-books" element={<UserBooksPage />} />
-            <Route path="/profile" element={<Profile />} />
-            {/* Redirects */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            <Route path="/login" element={<LoginPage onLogin={() => {handleLogin('member')}} />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
+        ) : userRole === 'admin' ? (
+          // Case 2: ADMIN LAYOUT (Sidebar + Dashboard)
+          <SidebarProvider>
+            <SideBar />
 
-          <Footer />
-        </div>
-      )}
-    </Router>
+            <SidebarInset>  
+                  <Routes>
+                    {/* Admin Specific Routes */}
+                    <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/admin/stats" element={<StatisticsPage />} />
+                    <Route path="/admin/users" element= {<UserAccounts/>} />
+                    {/* Shared Route */}
+                    <Route path="/profile" element={<Profile />} />
+                    {/* Redirects */}
+                    <Route path="*" element={<Navigate to="/admin" replace />} />
+                  </Routes>  
+            </SidebarInset>
+          </SidebarProvider>
+        ) : (
+          // Case 3: USER LAYOUT (Navbar + Footer + Catalog)
+          <div className="min-h-screen flex flex-col bg-background font-sans antialiased">
+            <Navbar onLogout={() => setIsAuthenticated(false)} />
+
+            <Routes>
+              {/* User Specific Routes */}
+              <Route path="/" element={<CatalogPage />} />
+              <Route path="/my-books" element={<UserBooksPage />} />
+              <Route path="/profile" element={<Profile />} />
+              {/* Redirects */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+
+            <Footer />
+          </div>
+        )}
+      </Router>
+    </ThemeProvider>
   );
 };
 
