@@ -1,10 +1,10 @@
 import React from "react";
 import ProfileHeader from "../components/Profile/ProfileHeader";
 import ProfileContent from "../components/Profile/ProfileContent";
-import { MOCK_USER } from "../data/mockUser";
+import { MOCK_USERS } from "../data/mockUsers";
 
 const ProfilePage: React.FC = () => {
-  const user = MOCK_USER;
+  const user = MOCK_USERS[0];
 
   return (
     <div className="min-h-0.5 w-full p-2 sm:p-8 bg-background">

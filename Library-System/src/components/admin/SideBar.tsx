@@ -101,7 +101,7 @@ export function SideBar({ onLogout, ...props }: SideBarProps) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg">
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src="https://github.com/shadcn.png" alt="Admin" />
+                <AvatarImage src="/src/assets/user-svgrepo-com.png" alt="Admin" />
                 <AvatarFallback>AD</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden">

@@ -1,34 +1,47 @@
-import React from 'react'
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import { useState } from "react";
+import React from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Users } from "lucide-react";
+import UserList from "@/components/admin/UserList";
+import type { User } from "@/types/user";
 
-
-
-function UserAccounts() {
+export default function ActivityOverview({ users }: { users: User[] }) {
   return (
-    <div className="container mx-auto py-10 px-4">
-        {/* Header & Controls */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight text-foreground">Activity Overview</h1>
-                <p className="text-muted-foreground"> Monitor user accounts activities.</p>
+    <div className="container mx-auto px-4 py-8">
+      <Card className="bg-card text-card-foreground border border-border shadow-sm">
+        
+        <CardHeader className="flex items-center justify-between gap-4 px-5 py-4">
+          <div className="flex items-center gap-3">
+            
+            <div className="bg-accent p-2 rounded-md">
+              <Users className="w-6 h-6 text-accent-foreground" />
             </div>
-        </div>
 
-        {/* Search Bar */}
-      {/* <div className="flex items-center gap-2 mb-6 bg-muted p-3 rounded-lg border border-border shadow-sm w-full md:w-1/3">
-        <Search className="text-muted-foreground" size={20} />
-        <Input
-          className="border-0 focus-visible:ring-0 text-base bg-transparent"
-          placeholder="Search books or members..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>*/}
-    </div> 
-    
-  )
+            <div>
+              <CardTitle className="text-lg font-semibold">
+                Activity Overview
+              </CardTitle>
+
+              <p className="text-sm text-muted-foreground">
+                List of users with quick profile access.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-sm text-muted-foreground">
+            Total:
+            <span className="font-medium text-foreground ml-1">
+              {users.length}
+            </span>
+          </div>
+        </CardHeader>
+
+        <Separator />
+
+        <CardContent className="p-0">
+          <UserList users={users} />
+        </CardContent>
+      </Card>
+    </div>
+  );
 }
-
-export default UserAccounts

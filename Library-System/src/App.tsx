@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { MOCK_USERS } from "@/data/mockUsers";
 
 // Pages
 import CatalogPage from './pages/CatalogPage';
@@ -54,7 +55,7 @@ export default function App() {
                     {/* Admin Specific Routes */}
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route path="/admin/stats" element={<StatisticsPage />} />
-                    <Route path="/admin/users" element={<UserAccounts />} />
+                    <Route path="/admin/users" element={<UserAccounts users={MOCK_USERS} />} />
                     {/* Shared Route */}
                     <Route path="/profile" element={<Profile />} />
                     {/* Redirects */}

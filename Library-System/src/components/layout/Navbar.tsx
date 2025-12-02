@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/mode-toggle";
+import type { User } from "../../types/user";
 
 interface NavbarProps {
   onLogout?: () => void;
@@ -57,7 +58,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
           <ModeToggle />
           <Link to="/profile">
             <Avatar className="h-9 w-9 border border-border cursor-pointer hover:ring-2 hover:ring-primary transition-all">
-              <AvatarImage src="https://github.com/shadcn.png" alt="User" />
+              <AvatarImage src="/src/assets/user-svgrepo-com.png" alt="user" />
               <AvatarFallback className="bg-primary/10 text-primary font-bold">
                 U
               </AvatarFallback>
