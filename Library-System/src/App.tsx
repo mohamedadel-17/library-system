@@ -65,8 +65,6 @@ export default function App() {
             <Route path="/my-books" element={<UserBooksPage />} />
             <Route path="/profile" element={<Profile />} />
             {/* Redirects */}
-            <Route path="/login" element={<Navigate to="/" replace />} />
-            <Route path="/signup" element={<Navigate to="/" replace />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
 
