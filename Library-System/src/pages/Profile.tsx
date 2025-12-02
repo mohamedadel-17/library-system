@@ -10,7 +10,8 @@ const ProfilePage: React.FC = () => {
     <div className="min-h-0.5 w-full p-2 sm:p-8 bg-background">
       <div className="max-w-4xl mx-auto bg-muted rounded-xl shadow-2xl border border-border">
         <ProfileHeader user={user} />
-        <ProfileContent user={user} />
+        {/* <ProfileContent user={user} /> */}
+        <ProfileContent />
       </div>
     </div>
   );
