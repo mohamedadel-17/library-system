@@ -1,6 +1,6 @@
 import  {LoginForm}  from "../components/forms/login-form.tsx"
 
-export default function LoginPage() {
+export default function LoginPage({onLogin}: {onLogin: () => void}) {
   return (
     <>
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
@@ -11,7 +11,7 @@ export default function LoginPage() {
           </div>
           3la Allah Library
         </a>
-        <LoginForm />
+        <LoginForm onLogin={onLogin} />
       </div>
     </div>
     </>

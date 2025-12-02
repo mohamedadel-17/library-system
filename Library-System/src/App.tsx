@@ -27,6 +27,11 @@ export default function App() {
     setUserRole(role);
   };
 
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setUserRole("member");
+  };
+
   return (
     <Router>
       {!isAuthenticated ? (
@@ -39,7 +44,7 @@ export default function App() {
       ) : userRole === 'admin' ? (
         // Case 2: ADMIN LAYOUT (Sidebar + Dashboard)
         <SidebarProvider>
-          <SideBar />
+          <SideBar onLogout={handleLogout}/>
 
           <SidebarInset>  
                 <Routes>
