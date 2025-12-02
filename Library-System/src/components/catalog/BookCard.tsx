@@ -63,7 +63,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
   );
 
   return (
-    <Card className="flex flex-col h-full hover:shadow-md transition-shadow overflow-hidden border border-border bg-background rounded-lg py-0">
+    <Card className="flex flex-col h-full hover:shadow-md transition-shadow overflow-hidden border border-border bg-background rounded-lg pt-0">
       
       {/* Cover */}
       <div className="relative w-full aspect-[3/4] bg-muted/40 flex items-center justify-center rounded-t-lg overflow-hidden">
