@@ -52,7 +52,7 @@ export function SideBar({ onLogout, ...props }: SideBarProps) {
               <div className="group-data-[collapsible=icon]:hidden">
                 <SidebarMenuButton size="lg" asChild>
                   <Link to="/">
-                    <img src="../src/assets/Logo.png" alt="Logo" className="h-8 w-8" />
+                    <img src="/images/Logo.png" alt="Logo" className="h-8 w-8" />
                     <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="font-bold">3la Allah</span>
                         <span className="truncate text-xs">Admin Panel</span>

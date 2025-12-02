@@ -18,7 +18,7 @@ export default function Navbar({ onLogout }: NavbarProps) {
           to="/" 
           className="flex items-center gap-2 font-bold text-xl text-primary hover:opacity-80 transition-opacity"
         >
-          <img src="../src/assets/Logo.png" alt="Logo" className="h-8 w-8" />
+          <img src="/images/Logo.png" alt="Logo" className="h-8 w-8" />
           <span>3la Allah</span>
         </Link>
 
