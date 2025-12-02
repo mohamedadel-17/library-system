@@ -1,4 +1,3 @@
-import React from "react";
 import UserListItem from "./UserListItem";
 import type { User } from "../../types/user";
 import { ScrollArea } from "@/components/ui/scroll-area";

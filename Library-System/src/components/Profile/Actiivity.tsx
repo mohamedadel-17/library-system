@@ -1,5 +1,4 @@
 import React from "react";
-import type { User } from "../../types/user";
 import SectionCard from "./SectionCard";
 
 const activityItems = [
@@ -9,7 +8,7 @@ const activityItems = [
   { time: "12/11/2025", description: "Browed Clean Code Book" },
 ];
 
-const GeneralInfo: React.FC<{ user: User }> = ({ user }) => (
+const GeneralInfo: React.FC = () => (
   <div className="space-y-6">
     <SectionCard title="Activity">
       <ul className="space-y-4">

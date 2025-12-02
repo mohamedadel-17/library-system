@@ -1,4 +1,3 @@
-import React from "react";
 import type { User } from "../../types/user";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";

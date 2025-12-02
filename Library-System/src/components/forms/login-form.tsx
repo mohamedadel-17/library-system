@@ -26,18 +26,18 @@ export function LoginForm({
   ...props
 }: LoginFormProps) {
   
-  const navigate = useNavigate() 
+  // const navigate = useNavigate() 
   
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
+  // function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  //   e.preventDefault()
 
-    const formData = new FormData(e.currentTarget)
-    const email = formData.get("email")
-    const password = formData.get("password")
+  //   const formData = new FormData(e.currentTarget)
+  //   const email = formData.get("email")
+  //   const password = formData.get("password")
 
-    // TODO: call your login API here, then on success:
-    /* navigate("/home") */
-  }
+  //   // TODO: call your login API here, then on success:
+  //   /* navigate("/home") */
+  // }
   return (
     // @ts-ignore
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -79,7 +79,7 @@ export function LoginForm({
                 </Button>
                 
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account?{" "} {/* مسافة عشان الكلام مايلزقش */}
+                  Don&apos;t have an account?{" "}
                   <Link to="/signup" className="text-blue-600 hover:underline">
                     Sign up
                   </Link>

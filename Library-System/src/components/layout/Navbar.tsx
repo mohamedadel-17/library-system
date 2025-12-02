@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ModeToggle } from "@/components/mode-toggle";
-import type { User } from "../../types/user";
 
 interface NavbarProps {
   onLogout?: () => void;
