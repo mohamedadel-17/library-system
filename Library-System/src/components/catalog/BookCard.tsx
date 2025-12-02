@@ -37,19 +37,17 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
 
   const handleAction = () => {
     if (isAvailable) {
-      // Borrowing requires chosen return date
       if (!date) {
         alert("Please select a return date first!");
         return;
       }
-      alert(`Success! You borrowed ${book.title}. Please return it by ${format(date, "PPP")}.`);
+      alert(`Success! You borrowed ${book.title}. Return it by ${format(date, "PPP")}.`);
     } else {
       alert(`Success! You reserved ${book.title}. We will notify you on ${book.returnDate}.`);
     }
     setIsOpen(false);
   };
 
-  // safely format a possible ISO string
   const formatDateString = (iso?: string) => {
     if (!iso) return "-";
     try {
@@ -59,21 +57,17 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
     }
   };
 
-  // button class (merge base + variant)
   const triggerBtnClass = cn(
     "w-full",
     isAvailable ? "" : "border-destructive/30 text-destructive hover:bg-destructive/10"
   );
 
   return (
-    <Card className="flex flex-col h-full hover:shadow-md transition-shadow overflow-hidden border border-border bg-background rounded-lg">
-      {/* Cover area */}
-      <div className="relative h-48 w-full bg-muted/40 flex items-center justify-center rounded-t-lg overflow-hidden">
-        <img
-          src={book.cover}
-          alt={book.title}
-          className="object-cover w-full h-full"
-        />
+    <Card className="flex flex-col h-full hover:shadow-md transition-shadow overflow-hidden border border-border bg-background rounded-lg py-0">
+      
+      {/* Cover */}
+      <div className="relative w-full aspect-[3/4] bg-muted/40 flex items-center justify-center rounded-t-lg overflow-hidden">
+        <img src={book.cover} alt={book.title} className="object-cover w-full h-full" />
         <Badge
           className="absolute top-2 right-2"
           variant={isAvailable ? "default" : "destructive"}
@@ -82,25 +76,27 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
         </Badge>
       </div>
 
-      {/* Title & author */}
-      <CardHeader>
+      {/* Title & Author */}
+      <CardHeader className="">
         <CardTitle className="line-clamp-1 text-foreground">{book.title}</CardTitle>
         <CardDescription className="text-muted-foreground">{book.author}</CardDescription>
       </CardHeader>
 
-      <CardContent className="grow">
+      {/* Category & Return Date */}
+      <CardContent className="">
         <span className="text-xs font-medium bg-primary/10 px-2 py-1 rounded text-primary">
           {book.category}
         </span>
 
         {!isAvailable && book.returnDate && (
-          <p className="text-xs text-destructive mt-3 font-medium">
+          <p className="text-xs text-destructive mt-2 font-medium">
             Returns: {formatDateString(book.returnDate)}
           </p>
         )}
       </CardContent>
 
-      <CardFooter>
+      {/* Bottom Action Button */}
+      <CardFooter className="">
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
             <Button variant={isAvailable ? "default" : "outline"} className={triggerBtnClass}>
@@ -115,17 +111,15 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
               </DialogTitle>
               <DialogDescription className="text-muted-foreground">
                 {isAvailable
-                  ? "Please specify when you will return this book."
-                  : "This book is currently borrowed. Reserve it now to pick it up when it returns."}
+                  ? "Select when you will return this book."
+                  : "This book is borrowed. Reserve it now."}
               </DialogDescription>
             </DialogHeader>
 
-            {/* Select date (only when available) */}
-            <div className="py-4">
+            <div>
               {isAvailable ? (
-                <div className="flex flex-col space-y-2">
-                  <label className="text-sm font-medium text-foreground">Select Return Date:</label>
-
+                <div className="flex flex-col gap-2">
+                  <label className="text-sm font-medium text-foreground">Return Date:</label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
@@ -136,17 +130,16 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                         )}
                       >
                         <CalendarIcon className="mr-2 h-4 w-4" />
-                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                        {date ? format(date, "PPP") : "Pick a date"}
                       </Button>
                     </PopoverTrigger>
 
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className="p-0">
                       <Calendar
                         mode="single"
                         selected={date}
                         onSelect={setDate}
                         initialFocus
-                        // disable dates in the past
                         disabled={(d) => d < new Date()}
                       />
                     </PopoverContent>
@@ -154,7 +147,8 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
                 </div>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  Expected Availability Date: <strong className="text-foreground">{formatDateString(book.returnDate)}</strong>
+                  Expected Availability:{" "}
+                  <strong className="text-foreground">{formatDateString(book.returnDate)}</strong>
                 </p>
               )}
             </div>
@@ -163,7 +157,6 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
               <Button variant="ghost" onClick={() => setIsOpen(false)}>
                 Cancel
               </Button>
-
               <Button onClick={handleAction} disabled={isAvailable && !date}>
                 {isAvailable ? "Confirm Borrow" : "Confirm Reservation"}
               </Button>

@@ -20,7 +20,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(true); 
-  const [userRole, setUserRole] = useState("admin"); 
+  const [userRole, setUserRole] = useState("member"); 
 
   const handleLogin = (role: string) => {
     setIsAuthenticated(true);

@@ -9,10 +9,12 @@ const CatalogPage: React.FC = () => {
 
   // Logic: Filter Books
   const filteredBooks = booksData.filter((book) => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          book.author.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = filterCategory === "All" || book.category === filterCategory;
+    const matchesSearch =
+      book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesCategory =
+      filterCategory === "All" || book.category === filterCategory;
 
     return matchesSearch && matchesCategory;
   });
@@ -27,10 +29,10 @@ const CatalogPage: React.FC = () => {
       </div>
 
       {/* Search & Filter Component */}
-      <FilterBar 
-        searchTerm={searchTerm} 
-        setSearchTerm={setSearchTerm} 
-        setFilterCategory={setFilterCategory} 
+      <FilterBar
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        setFilterCategory={setFilterCategory}
       />
 
       {/* Results Grid */}
@@ -41,9 +43,9 @@ const CatalogPage: React.FC = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center py-20">
-          <h3 className="text-lg font-semibold text-gray-600">No books found</h3>
-          <p className="text-gray-500">Try adjusting your search or filters.</p>
+        <div className="text-center py-20 text-muted-foreground">
+          <h3 className="text-lg font-semibold text-foreground">No books found</h3>
+          <p>Try adjusting your search or filters.</p>
         </div>
       )}
     </div>
