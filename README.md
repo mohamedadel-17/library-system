@@ -9,18 +9,17 @@ This project is a modern library system built with React, TypeScript, and Vite. 
 
 ## Table of Contents
 
-1.  [Features](#features)
-2.  [Tech Stack](#tech-stack)
-3.  [Installation](#installation)
-4.  [Usage](#usage)
-5.  [Project Structure](#project-structure)
-6.  [API Reference](#api-reference)
-7.  [Contributing](#contributing)
-8.  [License](#license)
-9. [Important Links](#important-links)
-10. [Footer](#footer)
+1. [Features](#features)
+2. [Tech Stack](#tech-stack)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [Project Structure](#project-structure)
+6. [API Reference](#api-reference)
+7. [Contributing](#contributing)
+8. [Important Links](#important-links)
+9. [Footer](#footer)
 
-## Features ✨
+## Features
 
 *   **Book Catalog:** Browse available books by title, author, or category. 🔍
 *   **User Authentication:** Secure login and signup for members and admins. 🔐
@@ -31,7 +30,7 @@ This project is a modern library system built with React, TypeScript, and Vite. 
 *   **Theme Support:** Toggle between light and dark themes. 🌗
 *   **Responsive Layout:** User interface adapts to different screen sizes. 📱
 
-## Tech Stack 💻
+## Tech Stack
 
 *   **Frontend:**
     *   React
@@ -47,7 +46,7 @@ This project is a modern library system built with React, TypeScript, and Vite. 
     *   Node.js
     *   eslint
 
-## Installation ⚙️
+## Installation
 
 1.  Clone the repository:
 
@@ -62,7 +61,7 @@ This project is a modern library system built with React, TypeScript, and Vite. 
     npm install
     ```
 
-## Usage 🚀
+## Usage
 
 1.  Start the development server:
 
@@ -86,7 +85,7 @@ This project is a modern library system built with React, TypeScript, and Vite. 
     *   Manage user accounts on the User Accounts page (`/admin/users`).
     *   View library statistics on the Statistics page (`/admin/stats`).
 
-## Project Structure 🌳
+## Project Structure
 
 ```
 Library-System/
@@ -151,11 +150,11 @@ Library-System/
 ├── components.json
 ```
 
-## API Reference ℹ️
+## API Reference
 
 This project mainly focuses on the frontend implementation. There are no explicit backend APIs defined in the provided code. However, the `src/components/forms/login-form.tsx` and `src/components/forms/signup-form.tsx` files indicate placeholders for API calls that could be integrated for user authentication.
 
-## Contributing 🤝
+## Contributing
 
 Contributions are always welcome!
 
@@ -165,16 +164,13 @@ Contributions are always welcome!
 4.  Push to the branch.
 5.  Submit a pull request.
 
-## License 📜
 
-This project has no specified license.
-
-## Important Links 🔗
+## Important Links
 
 *   **Users' Profiles:** [https://github.com/mohamedadel-17](https://github.com/mohamedadel-17) , [https://github.com/tAwFiK2005](https://github.com/tAwFiK2005) 
 *   **Project Repository:** [https://github.com/mohamedadel-17/library-system](https://github.com/mohamedadel-17/library-system)
 
-## Footer 📝
+## Footer
 
 [Library System](https://github.com/mohamedadel-17/library-system) - A project by [Mohamed Adel](https://github.com/mohamedadel-17) & [Ahmed Tawfik](https://github.com/tAwFiK2005) . Feel free to fork, like, and star the repository! If you have any issues or suggestions, please open an issue. 🚀
 
