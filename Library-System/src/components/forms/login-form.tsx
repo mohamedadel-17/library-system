@@ -16,11 +16,16 @@ import {
 import { Input } from "@/components/ui/input"
 import { useNavigate } from "react-router-dom" 
 
+interface LoginFormProps extends React.ComponentPropsWithoutRef<"form"> {
+  onLogin: (role: string) => void;
+}
 
 export function LoginForm({
+  onLogin,
   className,
   ...props
-}: React.ComponentProps<"div">) {
+}: LoginFormProps) {
+  
   const navigate = useNavigate() 
   
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -65,7 +70,11 @@ export function LoginForm({
                 <Input id="password" name="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit"
+                  onClick={onLogin}
+                >
+                  Login
+                </Button>
                 
                 <FieldDescription className="text-center">
                   Don&apos;t have an account?{" "} {/* مسافة عشان الكلام مايلزقش */}
