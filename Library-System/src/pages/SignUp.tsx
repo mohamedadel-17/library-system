@@ -7,7 +7,7 @@ export default function SignupPage() {
         <div className="flex justify-center gap-2 md:justify-start">
           <a href="/" className="flex items-center gap-2 font-medium">
             <div className=" text-primary-foreground flex size-6 items-center justify-center rounded-md">
-              <img src="/src/assets/Logo.png" className="" />
+              <img src="../src/assets/Logo.png" className="" alt="Logo"/>
             </div>
             3la Allah Library
           </a>
@@ -20,7 +20,7 @@ export default function SignupPage() {
       </div>
       <div className="bg-muted relative hidden lg:block">
         <img
-          src="/src/assets/signupphoto.png"
+          src="../src/assets/signupphoto.png"
           alt="Image"
           className="absolute inset-0 h-full w-full object-cover"
         />

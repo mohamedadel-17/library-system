@@ -8,7 +8,7 @@ const ProfileHeader: React.FC<{ user: User }> = ({ user }) => {
         
         <img
           className="h-24 w-24 rounded-full object-cover border-4 border-yellow-500 shadow-md"
-          src={"src/assets/user-svgrepo-com.png"}
+          src={"../src/assets/user-svgrepo-com.png"}
           alt="User avatar"
         />
 
