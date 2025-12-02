@@ -1,4 +1,3 @@
-import React from 'react';
 import { booksData } from '../data/books';
 import BookCard from '../components/catalog/BookCard';
 import { Button } from "@/components/ui/button";
@@ -6,9 +5,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen } from "lucide-react";
 
 export default function UserBooksPage() {
-  //!
   const CURRENT_USER = "John Doe";
-
   const myBooks = booksData.filter(book => 
     book.status === "Borrowed" && book.borrowerName === CURRENT_USER
   );
