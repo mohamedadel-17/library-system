@@ -34,9 +34,12 @@ export default function App() {
         {!isAuthenticated ? (
           // Case 1: Not Logged In (Login / Signup Only)
           <Routes>
-            <Route path="/login" element={<LoginPage onLogin={() => {handleLogin('member')}} />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="*" element={<Navigate to="/login" replace />} />
+            {/* User Specific Routes */}
+            <Route path="/" element={<CatalogPage />} />
+            <Route path="/my-books" element={<UserBooksPage />} />
+            <Route path="/profile" element={<Profile />} />
+            {/* Redirects */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         ) : userRole === 'admin' ? (
           // Case 2: ADMIN LAYOUT (Sidebar + Dashboard)
