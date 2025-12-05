@@ -3,33 +3,44 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { PlusCircle } from "lucide-react";
-import type { Book } from '../../types';
+// import type { Book } from '../../types'; // <== لم تعد ضرورية إذا كانت في books.service
 import { useState } from "react";
+import { createBook } from "../../services/services"; // <== استيراد الخدمة والأنواع
+import type { Book } from "../../services/services";
+import type { CreateBookDto } from "../../services/services";
 
 interface AddBookSheetProps {
   onAddBook: (book: Book) => void;
-  nextId: number;
+  // nextId: number; // <== لم تعد ضرورية، الـ Backend يحدد الـ ID
 }
 
-export default function AddBookSheet({ onAddBook, nextId }: AddBookSheetProps) {
+export default function AddBookSheet({ onAddBook }: AddBookSheetProps) {
   const [open, setOpen] = useState(false);
-  const [newBook, setNewBook] = useState({ title: "", author: "", category: "" });
+  const [newBook, setNewBook] = useState<CreateBookDto>({ title: "", author: "", category: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => { // <== دالة غير متزامنة
     if (!newBook.title || !newBook.author) return alert("Please fill details");
-
-    const bookToAdd: Book = {
-      id: nextId,
-      title: newBook.title,
-      author: newBook.author,
-      category: newBook.category || "General",
-      status: "Available",
-      cover: "https://placehold.co/400x600?text=New+Book"
+    
+    setIsSubmitting(true);
+    
+    const apiPayload: CreateBookDto = {
+        title: newBook.title,
+        author: newBook.author,
+        category: newBook.category || "General",
     };
 
-    onAddBook(bookToAdd);
-    setNewBook({ title: "", author: "", category: "" });
-    setOpen(false);
+    try {
+        const addedBook = await createBook(apiPayload); // <== استدعاء الـ API
+        onAddBook(addedBook); // تمرير الكتاب الذي يحتوي على الـ ID الحقيقي من الـ Backend
+        setNewBook({ title: "", author: "", category: "" });
+        setOpen(false);
+    } catch (error) {
+        console.error("Failed to add book:", error);
+        alert("Failed to add book. Please try again.");
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   return (
@@ -54,7 +65,9 @@ export default function AddBookSheet({ onAddBook, nextId }: AddBookSheetProps) {
             <Label>Category</Label>
             <Input value={newBook.category} onChange={e => setNewBook({...newBook, category: e.target.value})} placeholder="Category"/>
           </div>
-          <Button onClick={handleSubmit}>Save Book</Button>
+          <Button onClick={handleSubmit} disabled={isSubmitting}>
+             {isSubmitting ? "Saving..." : "Save Book"}
+          </Button>
         </div>
       </SheetContent>
     </Sheet>

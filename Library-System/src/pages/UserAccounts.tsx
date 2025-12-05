@@ -2,9 +2,42 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Users } from "lucide-react";
 import UserList from "@/components/admin/UserList";
-import type { User } from "@/types/user";
+import { useState, useEffect, useCallback } from "react"; // <== إضافة الـ Hooks
+import { getAllUsers } from "../services/services"; // <== استيراد الخدمة والـ Type
+import type { User } from "../services/services";
 
-export default function ActivityOverview({ users }: { users: User[] }) {
+// لم يعد يستقبل الـ users كـ prop
+export default function ActivityOverview() { 
+  const [users, setUsers] = useState<User[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // دالة جلب المستخدمين
+  const fetchUsers = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const data = await getAllUsers(); // <== تنفيذ الـ request هنا
+      setUsers(data); 
+    } catch (error) {
+      console.error("Failed to fetch users:", error);
+      // يمكنك إضافة رسالة خطأ مناسبة هنا
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  // تشغيل الـ request عند تحميل المكون
+  useEffect(() => {
+    fetchUsers();
+  }, [fetchUsers]);
+
+  if (isLoading) {
+    return (
+      <div className="container mx-auto px-4 py-8 text-center">
+        <p className="text-lg mt-10">Loading user data...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <Card className="bg-card text-card-foreground border border-border shadow-sm">
@@ -38,6 +71,7 @@ export default function ActivityOverview({ users }: { users: User[] }) {
         <Separator />
 
         <CardContent className="p-0">
+          {/* تمرير البيانات التي تم جلبها داخلياً */}
           <UserList users={users} />
         </CardContent>
       </Card>

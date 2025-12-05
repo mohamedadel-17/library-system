@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { MOCK_USERS } from "@/data/mockUsers";
+// import { MOCK_USERS } from "@/data/mockUsers"; // تم حذف الاستيراد
 
 // Pages
 import CatalogPage from './pages/CatalogPage';
@@ -22,13 +22,14 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { ThemeProvider } from './components/theme-provider';
 
 export default function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(true); 
-  const [userRole, setUserRole] = useState("admin"); 
+  const [isAuthenticated, setIsAuthenticated] = useState(false); 
+  const [userRole, setUserRole] = useState("member"); 
 
   const handleLogin = (role: string) => {
     setIsAuthenticated(true);
     setUserRole(role);
   };
+console.log(userRole);
 
   const handleLogout = () => {
     setIsAuthenticated(false);
@@ -39,41 +40,33 @@ export default function App() {
     <ThemeProvider>
       <Router>
         {!isAuthenticated ? (
-          // Case 1: Not Logged In (Login / Signup Only)
           <Routes>
-            <Route path="/login" element={<LoginPage onLogin={() => {handleLogin('member')}} />} />
+            <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
             <Route path="/signup" element={<SignUp />} />
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         ) : userRole === 'admin' ? (
-          // Case 2: ADMIN LAYOUT (Sidebar + Dashboard)
           <SidebarProvider>
             <SideBar onLogout={handleLogout}/>
 
             <SidebarInset>  
                   <Routes>
-                    {/* Admin Specific Routes */}
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route path="/admin/stats" element={<StatisticsPage />} />
-                    <Route path="/admin/users" element={<UserAccounts users={MOCK_USERS} />} />
-                    {/* Shared Route */}
+                    <Route path="/admin/users" element={<UserAccounts />} />
                     <Route path="/profile" element={<Profile />} />
-                    {/* Redirects */}
                     <Route path="*" element={<Navigate to="/admin" replace />} />
                   </Routes>  
             </SidebarInset>
           </SidebarProvider>
         ) : (
-          // Case 3: USER LAYOUT (Navbar + Footer + Catalog)
           <div className="min-h-screen flex flex-col bg-background font-sans antialiased">
-            <Navbar onLogout={() => setIsAuthenticated(false)} />
+            <Navbar onLogout={handleLogout} />
 
             <Routes>
-              {/* User Specific Routes */}
               <Route path="/" element={<CatalogPage />} />
               <Route path="/my-books" element={<UserBooksPage />} />
               <Route path="/profile" element={<Profile />} />
-              {/* Redirects */}
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
 
@@ -84,4 +77,3 @@ export default function App() {
     </ThemeProvider>
   );
 };
-

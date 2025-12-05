@@ -1,26 +1,60 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { BookOpen, AlertCircle, DollarSign, TrendingUp } from "lucide-react";
-import { differenceInDays, parseISO } from "date-fns";
+// import { differenceInDays, parseISO } from "date-fns"; // لن نستخدمها إذا كان الـ Backend يحسب الغرامات
 
-import { mostBorrowedData } from '../data/statistics';
-import { booksData } from '../data/books';
+// import { mostBorrowedData } from '../data/statistics'; // إزالة بيانات الـ Mock
+// import { booksData } from '../data/books'; // إزالة بيانات الـ Mock
+
+import { useState, useEffect, useCallback } from "react";
+import { 
+    getSummaryStats, 
+    getMostBorrowedBooks
+} from '../services/services'; // <== استيراد الدوال والدوال
+import type { MostBorrowedBook } from '../services/services'; // <== استيراد النوع فقط
+
+import type { SummaryStats } from '../services/services'; // <== استيراد النوع فقط
+
+// الأنواع الافتراضية
+const defaultSummary: SummaryStats = { totalBooks: 0, borrowedBooks: 0, totalFines: 0 };
 
 export default function StatisticsPage() {
-  const totalBooks = booksData.length;
-  const borrowedBooks = booksData.filter(b => b.status === "Borrowed").length;
+  const [summaryStats, setSummaryStats] = useState<SummaryStats>(defaultSummary);
+  const [mostBorrowed, setMostBorrowed] = useState<MostBorrowedBook[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const totalFines = booksData.reduce((acc, book) => {
-    if (book.status === "Borrowed" && book.returnDate) {
-      const today = new Date();
-      const due = parseISO(book.returnDate);
-      const diff = differenceInDays(today, due);
-      return diff > 0 ? acc + (diff * 10) : acc;
+  const fetchData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+        // جلب البيانات من الـ API
+        const [stats, topBooks] = await Promise.all([
+            getSummaryStats(),
+            getMostBorrowedBooks(),
+        ]);
+
+        setSummaryStats(stats);
+        setMostBorrowed(topBooks);
+    } catch (error) {
+        console.error("Failed to fetch statistics:", error);
+        // عرض رسالة خطأ للمستخدم
+    } finally {
+        setIsLoading(false);
     }
-    return acc;
-  }, 0);
+  }, []);
 
-  // compute max for progress bar widths
-  const maxCount = Math.max(...mostBorrowedData.map(b => b.count), 1);
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // حساب أقصى عدد للاستعارة (لشريط التقدم)
+  const maxCount = Math.max(...mostBorrowed.map(b => b.count), 1);
+
+  if (isLoading) {
+    return (
+        <div className="container mx-auto py-10 px-4 text-center">
+            <p className="text-lg mt-10">Loading statistics...</p>
+        </div>
+    );
+  }
 
   return (
     <div className="container mx-auto py-10 px-4">
@@ -39,7 +73,8 @@ export default function StatisticsPage() {
             <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{totalBooks}</div>
+            {/* استخدام بيانات الـ API */}
+            <div className="text-2xl font-bold text-foreground">{summaryStats.totalBooks}</div>
             <p className="text-xs text-muted-foreground">Books in catalog</p>
           </CardContent>
         </Card>
@@ -50,7 +85,8 @@ export default function StatisticsPage() {
             <AlertCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-foreground">{borrowedBooks}</div>
+            {/* استخدام بيانات الـ API */}
+            <div className="text-2xl font-bold text-foreground">{summaryStats.borrowedBooks}</div>
             <p className="text-xs text-muted-foreground">Active loans</p>
           </CardContent>
         </Card>
@@ -61,7 +97,8 @@ export default function StatisticsPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-destructive">${totalFines}</div>
+            {/* استخدام بيانات الـ API */}
+            <div className="text-2xl font-bold text-destructive">${summaryStats.totalFines}</div>
             <p className="text-xs text-muted-foreground">Unpaid late fees</p>
           </CardContent>
         </Card>
@@ -76,13 +113,13 @@ export default function StatisticsPage() {
               <CardTitle className="text-foreground">Most Borrowed Books</CardTitle>
             </div>
             <CardDescription className="text-muted-foreground">
-              Top 5 performing books based on historical data.
+              Top performing books based on historical data.
             </CardDescription>
           </CardHeader>
 
           <CardContent>
             <div className="space-y-6">
-              {mostBorrowedData.map((book) => (
+              {mostBorrowed.map((book) => (
                 <div key={book.id} className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
                     <div className="font-medium text-foreground">
@@ -91,7 +128,7 @@ export default function StatisticsPage() {
                     <div className="font-bold text-foreground">{book.count} times</div>
                   </div>
 
-                  {/* Progress Bar: track uses muted, fill uses primary with computed width */}
+                  {/* Progress Bar */}
                   <div className="h-2 w-full bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary rounded-full transition-all duration-500 ease-out"

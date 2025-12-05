@@ -14,7 +14,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-// import { useNavigate } from "react-router-dom" 
+import { login } from "../../services/services"
+import type { LoginDto } from "../../services/services"
 
 interface LoginFormProps extends React.ComponentPropsWithoutRef<"form"> {
   onLogin: (role: string) => void;
@@ -26,18 +27,28 @@ export function LoginForm({
   ...props
 }: LoginFormProps) {
   
-  // const navigate = useNavigate() 
-  
-  // function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  //   e.preventDefault()
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
 
-  //   const formData = new FormData(e.currentTarget)
-  //   const email = formData.get("email")
-  //   const password = formData.get("password")
+    const formData = new FormData(e.currentTarget)
+    
+    const payload: LoginDto = {
+        email: formData.get("email") as string,
+        password: formData.get("password") as string,
+    }
 
-  //   // TODO: call your login API here, then on success:
-  //   /* navigate("/home") */
-  // }
+    try {
+        const res = await login(payload);
+        
+        onLogin(res.user?.role);
+    
+        
+    } catch (error) {
+        console.error("Login failed:", error);
+        alert("Login failed. Check your email and password.");
+    }
+  }
+
   return (
     // @ts-ignore
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -46,7 +57,7 @@ export function LoginForm({
           <CardTitle className="text-xl">Welcome back</CardTitle>
         </CardHeader>
         <CardContent>
-          <form>
+          <form onSubmit={handleSubmit}>
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
@@ -71,10 +82,7 @@ export function LoginForm({
                 <Input id="password" name="password" type="password" required />
               </Field>
               <Field>
-                <Button type="submit"
-                   // @ts-ignore
-                  onClick={onLogin}
-                >
+                <Button type="submit">
                   Login
                 </Button>
                 

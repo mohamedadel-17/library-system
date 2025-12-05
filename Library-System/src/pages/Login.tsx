@@ -1,6 +1,7 @@
 import  {LoginForm}  from "../components/forms/login-form.tsx"
 
-export default function LoginPage({onLogin}: {onLogin: () => void}) {
+// قم بتعديل تعريف نوع الـ Prop 'onLogin' ليقبل معامل 'role' من نوع string
+export default function LoginPage({onLogin}: {onLogin: (role: string) => void}) {
   return (
     <>
     <div className="bg-muted flex min-h-svh flex-col items-center justify-center gap-6 p-6 md:p-10">
@@ -11,6 +12,7 @@ export default function LoginPage({onLogin}: {onLogin: () => void}) {
           </div>
           3la Allah Library
         </a>
+        {/* تمرير onLogin التي تقبل الـ role */}
         <LoginForm onLogin={onLogin} />
       </div>
     </div>

@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { booksData } from "../data/books";
-import type { Book } from "../types";
+import { useState, useEffect, useCallback } from "react"; // <== إضافة useEffect, useCallback
+// import { booksData } from "../data/books"; // <== إلغاء استيراد بيانات الـ Mock
+import {  getAllBooks, deleteBook, returnBook } from "../services/services"; // <== استيراد الخدمات والـ Book type
+import type {  Book } from "../services/services"; // <== استيراد الخدمات والـ Book type
 
 // Components
 import BooksTable from "../components/admin/BooksTable";
@@ -9,37 +10,72 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
 export default function AdminDashboard() {
-  const [books, setBooks] = useState<Book[]>(booksData);
+  const [books, setBooks] = useState<Book[]>([]); // <== البدء بمصفوفة فارغة
   const [searchTerm, setSearchTerm] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  // دالة لجلب البيانات من الـ API عند تحميل الصفحة
+  const fetchBooks = useCallback(async () => {
+      try {
+          setIsLoading(true);
+          const data = await getAllBooks();
+          setBooks(data);
+      } catch (error) {
+          console.error("Failed to fetch books:", error);
+          // يمكن إضافة منطق لعرض رسالة خطأ للمستخدم
+      } finally {
+          setIsLoading(false);
+      }
+  }, []);
+
+  useEffect(() => {
+    fetchBooks();
+  }, [fetchBooks]);
+
 
   // Logic Functions (Passed down as Props)
   const handleAddBook = (newBook: Book) => {
-    setBooks([...books, newBook]);
+    // يتم تحديث الحالة مباشرة بالكتاب الجديد الذي تم إرجاعه من الـ Backend
+    setBooks((prevBooks) => [...prevBooks, newBook]);
   };
 
-  const handleReturnBook = (id: number) => {
+  const handleReturnBook = async (id: number) => {
     if (confirm("Confirm returning this book? Fine will be cleared.")) {
-      setBooks(
-        books.map((book) =>
-          book.id === id
-            ? { ...book, status: "Available", returnDate: undefined, borrowerName: undefined }
-            : book
-        )
-      );
+      try {
+          // استدعاء الـ API لإرجاع الكتاب
+          const returnedBook = await returnBook(id); 
+
+          // تحديث الحالة بالبيانات الجديدة التي تم إرجاعها من الـ Backend
+          setBooks(
+            books.map((book) =>
+              book.id === id ? returnedBook : book
+            )
+          );
+      } catch (error) {
+          console.error("Failed to return book:", error);
+          alert("Failed to return book.");
+      }
     }
   };
 
-  const handleDeleteBook = (id: number) => {
+  const handleDeleteBook = async (id: number) => {
     if (confirm("Are you sure you want to delete this book?")) {
-      setBooks(books.filter((book) => book.id !== id));
+      try {
+          await deleteBook(id); // <== استدعاء الـ API لحذف الكتاب
+          setBooks(books.filter((book) => book.id !== id)); // تحديث الـ UI
+      } catch (error) {
+          console.error("Failed to delete book:", error);
+          alert("Failed to delete book.");
+      }
     }
   };
 
-  // filtering
+  // filtering (يبقى كما هو)
   const filteredBooks = books.filter(
     (book) =>
       book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      book.borrowerName?.toLowerCase().includes(searchTerm.toLowerCase())
+      book.borrowerName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -51,7 +87,7 @@ export default function AdminDashboard() {
           <p className="text-muted-foreground">Library management overview.</p>
         </div>
 
-        <AddBookSheet onAddBook={handleAddBook} nextId={books.length + 1} />
+        <AddBookSheet onAddBook={handleAddBook} /> {/* <== تم إزالة nextId */}
       </div>
 
       {/* Search Bar */}
@@ -66,7 +102,15 @@ export default function AdminDashboard() {
       </div>
 
       {/* Books Table Component */}
-      <BooksTable books={filteredBooks} onReturn={handleReturnBook} onDelete={handleDeleteBook} />
+      {isLoading ? (
+          <p className="text-center text-lg mt-10">Loading books...</p>
+      ) : (
+          <BooksTable 
+              books={filteredBooks} 
+              onReturn={handleReturnBook} 
+              onDelete={handleDeleteBook} 
+          />
+      )}
     </div>
   );
 }

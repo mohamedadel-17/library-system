@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { useNavigate, Link } from "react-router-dom"
+import { register } from "../../services/services"
+import type { RegisterDto } from "../../services/services" // <== التعديل هنا: استيراد RegisterDto كنوع فقط
 
 export function SignupForm({
   className,
@@ -21,40 +23,31 @@ export function SignupForm({
 
     const formData = new FormData(e.currentTarget)
 
-    const payload = {
+    const payload: RegisterDto & { confirmPassword: string } = {
       name: formData.get("name") as string,
       email: formData.get("email") as string,
       password: formData.get("password") as string,
       confirmPassword: formData.get("confirm-password") as string,
     }
 
-    // ✅ Example: basic client-side check
     if (payload.password !== payload.confirmPassword) {
-      // you can replace this with a toast / error state
       alert("Passwords do not match")
       return
     }
 
+    const apiPayload: RegisterDto = {
+        name: payload.name,
+        email: payload.email,
+        password: payload.password,
+    }
+
     try {
-      // ✅ Ready for your real API:
-      /*
-      const res = await fetch("/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      })
+      await register(apiPayload)
 
-      if (!res.ok) {
-        // handle error response here (show message, etc.)
-        return
-      }
-      */
-
-      // ✅ On success, navigate to login (or dashboard if you prefer)
       navigate("/login")
     } catch (error) {
       console.error("Signup failed:", error)
-      // show some error UI here if you want
+      alert("Signup failed. Check console for details.")
     }
   }
 

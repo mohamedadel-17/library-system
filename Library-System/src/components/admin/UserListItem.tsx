@@ -1,10 +1,13 @@
-import type { User } from "../../types/user";
+// --- START OF FILE UserListItem.tsx ---
+
+import type { User } from "../../services/services";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom"; // لم نعد بحاجة إليها
 
-export default function UserListItem({ user }: { user: User }) {
-  const navigate = useNavigate();
+// تغيير الـ props لقبول دالة لفتح الـ Dialog
+export default function UserListItem({ user, onViewProfile }: { user: User, onViewProfile: (user: User) => void }) {
+  // const navigate = useNavigate(); // تم إزالته
 
   return (
     <li className="flex items-center justify-between gap-4 px-5 py-4 hover:bg-accent transition-colors">
@@ -14,13 +17,13 @@ export default function UserListItem({ user }: { user: User }) {
             src ="/src/assets/user-svgrepo-com.png"
           />
           <AvatarFallback>
-            {user.Name.split(" ").map(n => n[0]).slice(0, 2).join("")}
+            {user.name?.split(" ").map(n => n[0]).slice(0, 2).join("")}
           </AvatarFallback>
         </Avatar>
 
         <div className="min-w-0">
           <div className="text-sm font-medium text-foreground truncate">
-            {user.Name}
+            {user.name}
           </div>
           <div className="text-xs text-muted-foreground truncate">
             {user.email}
@@ -31,7 +34,8 @@ export default function UserListItem({ user }: { user: User }) {
       <Button
         size="sm"
         variant="ghost"
-        onClick={() => navigate(`/users/${user.id}`)}
+        // onClick الجديد: يستدعي الدالة لتحديد المستخدم وفتح الـ Dialog
+        onClick={() => onViewProfile(user)}
         className="hover:bg-accent underline  text-cyan-600"
       >
         View Profile
