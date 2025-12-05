@@ -52,9 +52,37 @@ export interface CreateBookDto {
 
 export type AuthResponse = {
   token: string;
-  role: 'admin' | 'member';
+  user:{
+role: 'admin' | 'user';
+  }
+  
 };
+export interface BorrowDto {
+  // bookId: string; // لم نعد نحتاج إليه هنا، سيتم تمريره كـ Param
+  userId: string; 
+  returnDate: Date; 
+}
 
+export async function borrowBook(bookId: string, dto: BorrowDto): Promise<Book> {
+  const response = await api.patch<Book>(`/books/borrow/${bookId}`, dto); 
+  return response.data;
+}
+// export async function reserveBook(bookId: string, userId: string): Promise<Book> {
+//     // بما أن الـ Backend لا يدعم الحجز مباشرة، سنفترض تحديثاً وهمياً أو رسالة خطأ
+//     throw new Error("Reservation not implemented on backend yet.");
+// }
+
+// // ------------------------------------
+// // 9. إرجاع كتاب (Return) - مطابقة لـ PATCH /books/return/:id
+// // ------------------------------------
+// export async function returnBook(id: string): Promise<Book> {
+//     const response = await api.patch<Book>(`/books/return/${id}`); 
+//     return response.data;
+// }
+export async function getBorrowedBooksByUser(userId: string): Promise<Book[]> {
+    const response = await api.get<Book[]>(`/books/user/${userId}`);
+    return response.data;
+}
 export async function register(registerPayload: RegisterDto): Promise<void> {
   const url = '/auth/register'; 
   await api.post(url, registerPayload);

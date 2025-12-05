@@ -20,14 +20,18 @@ import type { LoginDto } from "../../services/services"
 interface LoginFormProps extends React.ComponentPropsWithoutRef<"form"> {
   onLogin: (role: string) => void;
 }
-
+const saveAuthData = (token: string, user: { id: string, role: string }) => {
+    localStorage.setItem('authToken', token);
+    localStorage.setItem('userId', user.id);
+    localStorage.setItem('userRole', user.role);
+};
 export function LoginForm({
   onLogin,
   className,
   ...props
 }: LoginFormProps) {
   
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
 
     const formData = new FormData(e.currentTarget)
@@ -40,7 +44,11 @@ export function LoginForm({
     try {
         const res = await login(payload);
         
-        onLogin(res.user?.role);
+        // 1. حفظ بيانات المستخدم في الـ localStorage
+        saveAuthData(res.token, { id: res.user.id, role: res.user.role });
+        
+        // 2. تحديث حالة التطبيق (App.tsx)
+        onLogin(res.user.role);
     
         
     } catch (error) {

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import type { Book } from "../../types";
 import { format, parseISO } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 
@@ -25,27 +24,65 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
+import {  borrowBook } from '../../services/services'; // استيراد الدوال
+import type { BorrowDto } from '../../services/services';
+import type { Book, } from '../../services/services';
 
 interface BookCardProps {
   book: Book;
+  onUpdateBook: (updatedBook: Book) => void;
+  currentUserId: string; 
 }
 
-const BookCard: React.FC<BookCardProps> = ({ book }) => {
+const BookCard: React.FC<BookCardProps> = ({ book, onUpdateBook, currentUserId }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
+  const [isProcessing, setIsProcessing] = useState(false);
   const isAvailable = book.status === "Available";
 
-  const handleAction = () => {
-    if (isAvailable) {
-      if (!date) {
-        alert("Please select a return date first!");
+  const handleAction = async () => {
+    if (!currentUserId) {
+        alert("You must be logged in to perform this action.");
         return;
-      }
-      alert(`Success! You borrowed ${book.title}. Return it by ${format(date, "PPP")}.`);
-    } else {
-      alert(`Success! You reserved ${book.title}. We will notify you on ${book.returnDate}.`);
     }
-    setIsOpen(false);
+    
+    setIsProcessing(true);
+    
+    try {
+        let updatedBook: Book;
+
+        if (isAvailable) {
+            if (!date) {
+                alert("Please select a return date first!");
+                return;
+            }
+            // استدعاء دالة الاستعارة
+            const borrowPayload: BorrowDto = {
+                userId: currentUserId,
+                returnDate: date,
+            };
+            // تمرير book.id كأول معامل (حسب تعريف الدالة في services.ts)
+            updatedBook = await borrowBook(String(book.id), borrowPayload); 
+
+            onUpdateBook(updatedBook); 
+            setIsOpen(false);
+            alert(`Success! Borrowed ${book.title}. Return by ${format(date, "PPP")}.`);
+
+        } else {
+            // منطق الحجز المؤقت (حتى يتم دعمها في الـ Backend)
+            alert("Reservation is temporarily unavailable. The book is currently borrowed.");
+        }
+
+    } catch (error) {
+        console.error(`Failed to ${isAvailable ? "borrow" : "reserve"} book:`, error);
+        const errorMessage =
+          typeof error === "object" && error !== null && "response" in error
+            ? (error as any).response?.data?.message || "An unknown error occurred."
+            : "An unknown error occurred.";
+        alert(`Action failed. Error: ${errorMessage}`);
+    } finally {
+        setIsProcessing(false);
+    }
   };
 
   const formatDateString = (iso?: string) => {
@@ -66,7 +103,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
     <Card className="flex flex-col h-full hover:shadow-md transition-shadow overflow-hidden border border-border bg-background rounded-lg pt-0">
       
       {/* Cover */}
-      <div className="relative w-full aspect-[3/4] bg-muted/40 flex items-center justify-center rounded-t-lg overflow-hidden">
+      <div className="relative w-full aspect-3/4 bg-muted/40 flex items-center justify-center rounded-t-lg overflow-hidden">
         <img src={book.cover} alt={book.title} className="object-cover w-full h-full" />
         <Badge
           className="absolute top-2 right-2"
@@ -99,7 +136,11 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
       <CardFooter className="mt-auto pb-3">
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
           <DialogTrigger asChild>
-            <Button variant={isAvailable ? "default" : "outline"} className={triggerBtnClass}>
+            <Button 
+                variant={isAvailable ? "default" : "outline"} 
+                className={triggerBtnClass}
+                disabled={isProcessing}
+            >
               {isAvailable ? "Borrow Now" : "Reserve"}
             </Button>
           </DialogTrigger>
@@ -112,7 +153,7 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
               <DialogDescription className="text-muted-foreground">
                 {isAvailable
                   ? "Select when you will return this book."
-                  : "This book is borrowed. Reserve it now."}
+                  : "This book is borrowed. Reservation is currently unavailable."}
               </DialogDescription>
             </DialogHeader>
 
@@ -154,11 +195,14 @@ const BookCard: React.FC<BookCardProps> = ({ book }) => {
             </div>
 
             <DialogFooter>
-              <Button variant="ghost" onClick={() => setIsOpen(false)}>
+              <Button variant="ghost" onClick={() => setIsOpen(false)} disabled={isProcessing}>
                 Cancel
               </Button>
-              <Button onClick={handleAction} disabled={isAvailable && !date}>
-                {isAvailable ? "Confirm Borrow" : "Confirm Reservation"}
+              <Button 
+                onClick={handleAction} 
+                disabled={isProcessing || (isAvailable && !date)}
+              >
+                {isProcessing ? 'Processing...' : (isAvailable ? "Confirm Borrow" : "Confirm Reservation")}
               </Button>
             </DialogFooter>
           </DialogContent>
