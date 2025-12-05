@@ -131,3 +131,8 @@ export async function getMostBorrowedBooks(): Promise<MostBorrowedBook[]> {
     const response = await api.get<MostBorrowedBook[]>('/stats/most-borrowed');
     return response.data;
 }
+
+export async function getUserById(id: string): Promise<User> {
+  const response = await api.get<User>(`/users/${id}`)
+  return response.data
+}

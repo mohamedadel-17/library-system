@@ -27,6 +27,8 @@ const formatDateString = (iso?: string) => {
     }
 };
 
+
+
 export default function UserBooksPage() {
   const [myBooks, setMyBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -53,6 +55,8 @@ export default function UserBooksPage() {
     }
   }, [userId, isAuthenticated]);
 
+  const handleRefresh = () => fetchMyBooks();
+  
   useEffect(() => {
     fetchMyBooks();
   }, [fetchMyBooks]);
@@ -97,8 +101,8 @@ export default function UserBooksPage() {
               */}
               <BookCard 
                 book={book} 
-                onUpdateBook={() => {}} // دالة وهمية
-                currentUserId={userId ?? ''} // قيمة وهمية
+                onUpdateBook={handleRefresh} // دالة وهمية
+                currentUserId={userId!} //! قيمة وهمي
               />
               
               {/* تاريخ الإرجاع الفعلي */}

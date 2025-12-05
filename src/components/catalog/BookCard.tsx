@@ -49,7 +49,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, onUpdateBook, currentUserId }
     setIsProcessing(true);
     
     try {
-        let updatedBook: Book;
+        // let updatedBook: Book;
 
         if (isAvailable) {
             if (!date) {
@@ -59,12 +59,12 @@ const BookCard: React.FC<BookCardProps> = ({ book, onUpdateBook, currentUserId }
             // استدعاء دالة الاستعارة
             const borrowPayload: BorrowDto = {
                 userId: currentUserId,
-                returnDate: date,
+                returnDate: date.toISOString(), //!
             };
             // تمرير book.id كأول معامل (حسب تعريف الدالة في services.ts)
-            updatedBook = await borrowBook(String(book.id), borrowPayload); 
+            updatedBook = await borrowBook(book.id, borrowPayload); //!
 
-            onUpdateBook(updatedBook); 
+            onUpdateBook(); //! 
             setIsOpen(false);
             alert(`Success! Borrowed ${book.title}. Return by ${format(date, "PPP")}.`);
 
