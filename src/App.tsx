@@ -23,7 +23,7 @@ import { ThemeProvider } from './components/theme-provider';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false); 
-  const [userRole, setUserRole] = useState("member"); 
+  const [userRole, setUserRole] = useState("user"); 
 
   const handleLogin = (role: string) => {
     setIsAuthenticated(true);

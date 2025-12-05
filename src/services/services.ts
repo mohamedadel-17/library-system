@@ -52,11 +52,14 @@ export interface CreateBookDto {
 
 export type AuthResponse = {
   token: string;
-  user:{
-role: 'admin' | 'user';
-  }
-  
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: 'admin' | 'user';
+  };
 };
+
 export interface BorrowDto {
   // bookId: string; // لم نعد نحتاج إليه هنا، سيتم تمريره كـ Param
   userId: string; 

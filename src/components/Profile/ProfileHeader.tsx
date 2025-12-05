@@ -14,7 +14,7 @@ const ProfileHeader: React.FC<{ user: User }> = ({ user }) => {
 
         <div className="text-center sm:text-left">
           <h1 className="text-3xl font-extrabold text-foreground">
-            {user.Name}
+            {user.name}
           </h1>
           <p className="text-lg text-muted-foreground">
             {user.email}

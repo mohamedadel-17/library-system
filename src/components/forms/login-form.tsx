@@ -45,7 +45,7 @@ export function LoginForm({
         const res = await login(payload);
         
         // 1. حفظ بيانات المستخدم في الـ localStorage
-        saveAuthData(res.token, { id: res.user.id, role: res.user.role });
+        saveAuthData(res.token, { id: res.user.id || "", role: res.user.role });
         
         // 2. تحديث حالة التطبيق (App.tsx)
         onLogin(res.user.role);

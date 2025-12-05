@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 // import { booksData } from '../data/books'; // إزالة الـ Mock Data
 import BookCard from '../components/catalog/BookCard';
 import { Button } from "@/components/ui/button";
