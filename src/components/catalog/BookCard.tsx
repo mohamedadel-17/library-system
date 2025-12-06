@@ -38,7 +38,8 @@ const BookCard: React.FC<BookCardProps> = ({ book, onUpdateBook, currentUserId }
   const [isOpen, setIsOpen] = useState(false);
   const [date, setDate] = useState<Date | undefined>();
   const [isProcessing, setIsProcessing] = useState(false);
-  const isAvailable = book.status === "Available";
+  //! const isAvailable = book.status === "Available";
+  const isAvailable = book.status?.toLowerCase() === "available";
 
   const handleAction = async () => {
     if (!currentUserId) {
@@ -49,7 +50,7 @@ const BookCard: React.FC<BookCardProps> = ({ book, onUpdateBook, currentUserId }
     setIsProcessing(true);
     
     try {
-        // let updatedBook: Book;
+        let updatedBook: Book;
 
         if (isAvailable) {
             if (!date) {
