@@ -43,6 +43,7 @@ console.log(userRole);
           <Routes>
             <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
             <Route path="/signup" element={<SignUp />} />
+
             <Route path="*" element={<Navigate to="/login" replace />} />
           </Routes>
         ) : userRole === 'admin' ? (
@@ -54,7 +55,8 @@ console.log(userRole);
                     <Route path="/admin" element={<AdminDashboard />} />
                     <Route path="/admin/stats" element={<StatisticsPage />} />
                     <Route path="/admin/users" element={<UserAccounts />} />
-                    <Route path="/profile" element={<Profile />} />
+                    {/* Admin can open any user profile using same Profile page */} //!
+                    <Route path="/users/:id" element={<Profile />} />//!
                     <Route path="*" element={<Navigate to="/admin" replace />} />
                   </Routes>  
             </SidebarInset>
