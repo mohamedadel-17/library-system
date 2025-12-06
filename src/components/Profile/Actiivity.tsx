@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import SectionCard from "./SectionCard"
 import { getBorrowedBooksByUser, type Book } from "@/services/services"
 
@@ -15,37 +16,37 @@ const formatDate = (iso?: string | null): string => {
 }
 
 const GeneralInfo: React.FC = () => {
+  const { id: routeUserId } = useParams<{ id: string }>() // /users/:id -> that id, /profile -> undefined
+
   const [activities, setActivities] = useState<ActivityItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    // 1) If admin is on /users/:id → use that id
+    // 2) Else fallback to logged-in user id from localStorage (/profile)
     const stored = localStorage.getItem("userId")
+    const targetUserId = routeUserId ?? stored
 
-    if (!stored) {
+    if (!targetUserId) {
       setError("No user selected. Please log in again.")
       setLoading(false)
       return
     }
 
-    const userId: string = stored
-
-    async function loadActivity(id: string) {
+    async function loadActivity(userId: string) {
       setLoading(true)
       setError(null)
 
       try {
-        // 🔥 Fully typed Book[]
-        const currentBooks: Book[] = await getBorrowedBooksByUser(id)
+        const currentBooks: Book[] = await getBorrowedBooksByUser(userId)
 
         const currentItems: ActivityItem[] = currentBooks.map((book) => ({
           id: `current-${book.id}`,
           description: `Borrowed "${book.title}" (currently borrowed)`,
-          // ❗ You only have returnDate, so we use it
           time: formatDate(book.returnDate),
         }))
 
-        // Sort newest → oldest
         const sorted = [...currentItems].sort(
           (a, b) =>
             new Date(b.time).getTime() - new Date(a.time).getTime()
@@ -60,8 +61,8 @@ const GeneralInfo: React.FC = () => {
       }
     }
 
-    loadActivity(userId)
-  }, [])
+    loadActivity(targetUserId)
+  }, [routeUserId])
 
   return (
     <div className="space-y-6">
